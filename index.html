@@ -5,21 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calculadora baremo permanencia</title>
 <style>
-:root{--bg:#111827;--card:#1f2937;--inp:#2d3748;--tx:#fff;--mu:#9ca3af;--lb:#a78bfa;--or:#f97316;--ok:#4ade80;--ko:#f87171;--bd:#374151}
+:root{--bg:#111827;--card:#1f2937;--inp:#2d3748;--tx:#fff;--mu:#9ca3af;--lb:#a78bfa;--or:#f97316;--ok:#4ade80;--ko:#f87171;--bd:#374151;--gr:linear-gradient(90deg,#7e22ce,#f97316)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 Roboto,system-ui,-apple-system,Segoe UI,sans-serif;padding-bottom:170px}
-header{background:linear-gradient(90deg,#7e22ce,#f97316);padding:30px 16px;text-align:center}
-h1{font-size:26px;margin:0;letter-spacing:1px;text-transform:uppercase}
-main{max-width:720px;margin:0 auto;padding:16px 14px}
-.sub{color:var(--mu);font-size:13px;margin:0 0 14px;text-align:center}
-#sum{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--bd);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
-.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;max-width:720px;margin:0 auto}
-.kp b{display:block;font-size:30px;color:var(--or);line-height:1.1}.kp span{font-size:11px;color:var(--lb);font-weight:700;text-transform:uppercase}
-#msg{margin-top:6px;font-size:14px;text-align:center;font-weight:600}
-details{background:var(--card);border-left:6px solid var(--or);border-radius:18px;margin-bottom:14px}
-summary{padding:16px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--lb);text-transform:uppercase;letter-spacing:.5px}
-summary i{font-style:normal;color:#fff;background:var(--or);border-radius:10px;padding:4px 10px;font-size:14px}
-summary i:empty{display:none}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 Roboto,system-ui,-apple-system,Segoe UI,sans-serif;padding-bottom:100px}
+header{background:var(--gr);padding:26px 16px;text-align:center}
+h1{font-size:24px;margin:0;letter-spacing:1px;text-transform:uppercase}
+main{max-width:720px;margin:0 auto;padding:0 14px 16px}
+.sub{color:var(--mu);font-size:13px;margin:0 0 12px;text-align:center}
+.steps{display:flex;gap:6px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{flex:0 0 auto;background:var(--card);color:var(--mu);border:0;border-radius:999px;padding:8px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.steps button.on{background:var(--gr);color:#fff}
+.pg{display:none;background:var(--card);border-left:6px solid var(--or);border-radius:18px;margin-bottom:14px}
+.pg.on{display:block}
+.pg h2{margin:0;padding:16px;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--lb);text-transform:uppercase;letter-spacing:.5px}
+.pg h2 i{font-style:normal;color:#fff;background:var(--or);border-radius:10px;padding:4px 10px;font-size:14px}
+.pg h2 i:empty{display:none}
 .in{padding:0 16px 16px}
 .r{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--bd)}
 .r label{flex:1;font-size:14px}.r small{color:var(--mu);display:block;font-size:11px}
@@ -31,33 +32,35 @@ select{max-width:58%}
 table{width:100%;border-collapse:collapse;font-size:15px}
 th,td{padding:7px 6px;text-align:right;border-top:1px solid var(--bd)}th{color:var(--lb);font-size:12px;text-transform:uppercase}
 td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;color:var(--or)}
 .note{font-size:12px;color:var(--mu);margin:8px 0 0}
 .big{font-size:30px;font-weight:700;text-align:center;padding:8px;color:var(--or)}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;padding:6px 0 4px}
+.kp b{display:block;font-size:30px;color:var(--or);line-height:1.1}.kp span{font-size:11px;color:var(--lb);font-weight:700;text-transform:uppercase}
+#msg{margin:6px 0 4px;font-size:14px;text-align:center;font-weight:600}
+#nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--bd);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+#nav .w{max-width:720px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+#nav button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px;cursor:pointer;color:#fff}
+#prev{background:var(--inp)}#prev:disabled{opacity:.35;cursor:default}
+#next{background:var(--gr)}
+#run{text-align:center;font-size:11px;color:var(--lb);font-weight:700;text-transform:uppercase}
+#run b{display:block;font-size:22px;color:var(--or)}
 </style>
 </head>
 <body>
 <header><h1>Calculadora baremo permanencia</h1></header>
 <main>
-<p class="sub">Baremo + examen. Todo se calcula en tu dispositivo; no se guarda ningún dato.</p>
-
-<div id="sum">
-  <div class="kp">
-    <div><b id="kB">–</b><span>Baremo</span></div>
-    <div><b id="kN">–</b><span>Nota examen necesaria</span></div>
-    <div><b id="kE">–</b><span>Máx. errores (0 blancos)</span></div>
-  </div>
-  <div id="msg"></div>
-</div>
-
+<nav class="steps" id="steps"></nav>
 <div id="form"></div>
-
-<details open id="dObj"><summary>Objetivo: nota de corte <i id="oT"></i></summary><div class="in" id="obj"></div></details>
-<details open><summary>Errores y blancos permitidos <i></i></summary><div class="in"><div id="tbl"></div>
-<p class="note" id="tblN"></p></div></details>
-<details><summary>Calculadora manual de examen <i id="mT"></i></summary><div class="in" id="man"></div></details>
-
+<p class="sub">Todo se calcula en tu dispositivo; no se guarda ningún dato.</p>
 <p class="note">Herramienta orientativa basada en la hoja de cálculo original (baremo de la hoja original; cortes ET 2026 estimados; marcas de la Orden DEF/15/2026). Si hay diferencia con la convocatoria oficial, manda la convocatoria.</p>
 </main>
+
+<div id="nav"><div class="w">
+  <button id="prev">‹ Atrás</button>
+  <div id="run"><b id="kB2">–</b>Baremo</div>
+  <button id="next">Siguiente ›</button>
+</div></div>
 
 <script id="logic">
 /* ===== REGLAS (datos, se actualizan cada año) ===== */
@@ -109,14 +112,8 @@ function calc(s,R){
  const need=r6(cnt(s.corte)-baremo);
  return {prof:r6(pr),acad:r6(ad),ipec:r6(ipec),fis:r6(fs),raw,baremo,need};
 }
-const nota=(err,bl,R)=>r6((R.examN-err-bl)-R.penal*err);
-function maxErr(need,bl,R){return Math.floor((R.examN-need-bl)/(1+R.penal)+1e-9);}
-function frontier(need,R){
- const rows=[];
- for(let b=0;b<=R.examN;b++){const e=maxErr(need,b,R);if(e<0)break;
-  rows.push({bl:b,err:e,ac:R.examN-e-b,nota:nota(e,b,R)});}
- return rows;
-}
+/* máx. fallos respondiendo todas las preguntas */
+function maxErr(need,_,R){return Math.floor((R.examN-need)/(1+R.penal)+1e-9);}
 </script>
 
 <script>
@@ -125,34 +122,41 @@ const fmt=n=>Number(n).toLocaleString('es-ES',{maximumFractionDigits:3});
 const R=RULES;
 function row(id,label,hint,def,max){return `<div class="r"><label for="${id}">${label}${hint?`<small>${hint}</small>`:''}</label><input id="${id}" type="number" inputmode="decimal" min="0" ${max!=null?`max="${max}"`:''} value="${def||''}" placeholder="0"></div>`;}
 function sel(id,label,opts,def){return `<div class="r"><label for="${id}">${label}</label><select id="${id}">${opts.map((o,i)=>`<option value="${i}"${i==def?' selected':''}>${o}</option>`).join('')}</select></div>`;}
-function sect(id,title,body){return `<details open><summary>${title}<i id="${id}"></i></summary><div class="in">${body}</div></details>`;}
+const PAGES=[];
+function page(short,id,title,body){PAGES.push(short);return `<section class="pg"><h2>${title}<i id="${id}"></i></h2><div class="in">${body}</div></section>`;}
 
 const p=R.prof,a=R.acad;
 let h='';
-h+=sect('tP','1. Méritos profesionales',
+h+=page('Profesionales','tP','1. Méritos profesionales',
  row('pref','Meses en unidades preferentes',`×${fmt(p.pref)}`,0)+row('otras','Meses en otras unidades',`×${fmt(p.otras)}`,0)+
  row('mision','Meses en operaciones/misiones en el extranjero',`×${fmt(p.mision)} · máx. ${p.misionMaxMeses} meses`,0)+
  sel('empleo','Empleo (solo se valora uno)',p.empleo.map(x=>`${x[0]} (${x[1]})`),0)+
  `<div class="sub2">Recompensas militares (nº de cada una)</div>`+p.recomp.map((x,i)=>row('rc'+i,x[0],`${fmt(x[1])} pts cada una`,0)).join(''));
-h+=sect('tA','2. Méritos académicos',
+h+=page('Académicos','tA','2. Méritos académicos',
  sel('tit','Titulación (solo se valora una)',a.tit.map(x=>`${x[0]} (${x[1]})`),0)+
  `<div class="sub2">Idiomas (nº de cada uno)</div>`+a.idiomas.map((x,i)=>row('id'+i,x[0],`${fmt(x[1])} pts`,0)).join('')+
  `<div class="sub2">Cursos militares</div>`+row('cesp','Cursos de especialización',`${a.cursoEsp} pts · máx. ${a.cursosMax}`,0,a.cursosMax)+row('cinf','Cursos informativos',`${a.cursoInf} pts · máx. ${a.cursosMax}`,0,a.cursosMax));
-h+=sect('tI','3. Informes personales',row('ipec','Media IPEC (0 a 10)',`×${R.ipecFactor} · máx. ${R.max.ipec} pts`,0,10).replace('type="number"','type="number" step="0.01"'));
-h+=sect('tF','4. Pruebas físicas',
+h+=page('Informes','tI','3. Informes personales',row('ipec','Media IPEC (0 a 10)',`×${R.ipecFactor} · máx. ${R.max.ipec} pts`,0,10).replace('type="number"','type="number" step="0.01"'));
+h+=page('Físicas','tF','4. Pruebas físicas',
  sel('sexo','Sexo (tabla de marcas)',['Hombre','Mujer'],0)+
  R.fis.map((f,i)=>`<div class="r"><label for="f${i}">${f.n}</label><select id="f${i}"></select></div>`).join(''));
+h+=page('Corte','oT','5. Nota de corte objetivo',
+ row('corte','Nota de corte objetivo','',R.corte)+
+ `<div class="r"><label for="esp">Cortes estimados ET 2026<small>No oficiales · rellena la nota de corte</small></label><select id="esp"><option value="">— elegir —</option>`+
+ R.cortes.map(c=>`<option value="${c[2]}">${c[0]} · ${c[1]} plazas · ${fmt(c[2])}</option>`).join('')+`</select></div>`);
+h+=page('Resultado','','6. Resultado',
+ `<div class="kp"><div><b id="kB">–</b><span>Baremo</span></div><div><b id="kN">–</b><span>Nota examen necesaria</span></div><div><b id="kE">–</b><span>Máx. fallos</span></div></div><div id="msg"></div>`+
+ `<div class="sub2">Desglose del baremo</div><div id="des"></div>`+
+ `<div class="sub2">Simulador del examen</div>`+
+ row('cAc','Aciertos','',0,R.examN)+row('cFa','Fallos',`cada fallo resta ${fmt(R.penal)}`,0,R.examN)+
+ `<div id="sim"></div><div class="big" id="cRes"></div><p class="note" id="cNote"></p>`);
 $('form').innerHTML=h;
+$('steps').innerHTML=PAGES.map((s,i)=>`<button data-i="${i}">${i+1}. ${s}</button>`).join('');
 
 function fillFis(){const c=+$('sexo').value;R.fis.forEach((f,i)=>{const el=$('f'+i),keep=el.value||'0';
  el.innerHTML=f.t.map((t,k)=>`<option value="${5-k}"${(5-k)==keep?' selected':''}>${t[c]} → ${5-k} pts</option>`).join('');
  if(!el.value)el.value='0';});}
 fillFis();
-
-$('obj').innerHTML=row('corte','Nota de corte objetivo','',R.corte)+
- `<div class="r"><label for="esp">Cortes estimados ET 2026<small>No oficiales · rellena la nota de corte</small></label><select id="esp"><option value="">— elegir —</option>`+
- R.cortes.map(c=>`<option value="${c[2]}">${c[0]} · ${c[1]} plazas · ${fmt(c[2])}</option>`).join('')+`</select></div>`;
-$('man').innerHTML=row('mErr','Errores','',0)+row('mBl','Blancos','',0)+`<div class="big" id="mRes"></div>`;
 
 function rd(id){return $(id).value}
 function state(){return {pref:rd('pref'),otras:rd('otras'),mision:rd('mision'),empleo:rd('empleo'),
@@ -163,18 +167,39 @@ function update(){
  const r=calc(state(),R);
  $('tP').textContent=`${fmt(r.prof)} / ${R.max.prof}`;$('tA').textContent=`${fmt(r.acad)} / ${R.max.acad}`;
  $('tI').textContent=`${fmt(r.ipec)} / ${R.max.ipec}`;$('tF').textContent=`${fmt(r.fis)} / ${R.max.fis}`;
- $('kB').textContent=fmt(r.baremo);$('oT').textContent=fmt(cnt(rd('corte')));
- const m=$('msg');let rows=[];
+ $('kB').textContent=$('kB2').textContent=fmt(r.baremo);$('oT').textContent=fmt(cnt(rd('corte')));
+ $('des').innerHTML=`<table><tr><th>Apartado</th><th>Puntos</th><th>Máx.</th></tr>`+
+  [['Profesionales',r.prof,R.max.prof],['Académicos',r.acad,R.max.acad],['Informes',r.ipec,R.max.ipec],['Físicas',r.fis,R.max.fis]]
+  .map(x=>`<tr><td>${x[0]}</td><td>${fmt(x[1])}</td><td>${x[2]}</td></tr>`).join('')+
+  `<tr class="tot"><td>Baremo</td><td>${fmt(r.baremo)}</td><td>${R.max.prof+R.max.acad+R.max.ipec+R.max.fis}</td></tr>`+
+  `<tr><td>Nota de corte</td><td>${fmt(cnt(rd('corte')))}</td><td></td></tr></table>`;
+ const m=$('msg');
  if(r.need>R.examN){$('kN').textContent=fmt(r.need);$('kE').textContent='–';m.textContent='Imposible: ni con examen perfecto llegas al corte.';m.style.color='var(--ko)';}
  else if(r.need<=0){$('kN').textContent='0';$('kE').textContent='–';m.textContent='Corte alcanzado solo con el baremo.';m.style.color='var(--ok)';}
- else{$('kN').textContent=fmt(r.need);$('kE').textContent=maxErr(r.need,0,R);m.textContent='Necesitas '+fmt(r.need)+' en el examen.';m.style.color='var(--lb)';rows=frontier(r.need,R);}
- $('tbl').innerHTML=rows.length?`<table><tr><th>Blancos</th><th>Máx. errores</th><th>Aciertos</th><th>Nota</th></tr>`+rows.map(x=>`<tr><td>${x.bl}</td><td>${x.err}</td><td>${x.ac}</td><td>${fmt(x.nota)}</td></tr>`).join('')+`</table>`:'<p class="note">Sin tabla para este caso.</p>';
- $('tblN').textContent=`Examen de ${R.examN} preguntas; cada error resta ${R.penal} aciertos. Por cada fila, más errores que los indicados no alcanzan la nota necesaria.`;
- const n=nota(cnt(rd('mErr')),cnt(rd('mBl')),R);$('mRes').textContent='Nota: '+fmt(n);$('mT').textContent=fmt(n);
+ else{$('kN').textContent=fmt(r.need);$('kE').textContent=maxErr(r.need,0,R);m.textContent='Necesitas '+fmt(r.need)+' en el examen.';m.style.color='var(--lb)';}
+ const ac=Math.min(cnt(rd('cAc')),R.examN),fa=cnt(rd('cFa')),cr=$('cRes'),cn=$('cNote'),corte=cnt(rd('corte'));
+ if(ac+fa>R.examN){$('sim').innerHTML='';cr.textContent='–';cr.style.color='var(--ko)';cn.textContent=`Aciertos + fallos no puede pasar de ${R.examN} preguntas.`;}
+ else{const ex=r6(Math.max(0,ac-R.penal*fa)),fin=r6(r.baremo+ex),dif=r6(fin-corte),need=Math.max(0,r.need);
+  $('sim').innerHTML=`<table><tr><td>Nota del examen</td><td>${fmt(ex)}</td></tr><tr><td>Baremo</td><td>${fmt(r.baremo)}</td></tr>`+
+   `<tr class="tot"><td>Nota final</td><td>${fmt(fin)}</td></tr><tr><td>Nota de corte</td><td>${fmt(corte)}</td></tr>`+
+   `<tr><td>Diferencia</td><td style="color:var(${dif>=0?'--ok':'--ko'})">${dif>0?'+':''}${fmt(dif)}</td></tr></table>`;
+  cr.textContent=!ac&&!fa?'':dif>=0?'Superas el corte':'No llegas al corte';cr.style.color=`var(${dif>=0?'--ok':'--ko'})`;
+  const fMax=Math.min(Math.floor((ac-need)/R.penal+1e-9),R.examN-ac);
+  cn.textContent=!ac?'Escribe tus aciertos y fallos para simular.':fMax<0?`Con ${ac} aciertos no llegas al corte ni sin fallos: te faltan ${fmt(r6(need-ac))} puntos.`:`Con ${ac} aciertos puedes fallar como máximo ${fMax}.`;}
 }
+
+let cur=0;const pgs=[...document.querySelectorAll('.pg')],sb=[...document.querySelectorAll('.steps button')],last=pgs.length-1;
+function go(i){cur=Math.max(0,Math.min(last,i));
+ pgs.forEach((x,k)=>x.classList.toggle('on',k==cur));sb.forEach((x,k)=>x.classList.toggle('on',k==cur));
+ sb[cur].scrollIntoView?.({inline:'center',block:'nearest'});
+ $('prev').disabled=cur==0;$('next').textContent=cur==last?'Inicio ⟲':(cur==last-1?'Ver resultado ›':'Siguiente ›');
+ window.scrollTo(0,0);}
+$('prev').onclick=()=>go(cur-1);
+$('next').onclick=()=>go(cur==last?0:cur+1);
+$('steps').onclick=e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i);};
 document.addEventListener('input',e=>{if(e.target.id==='esp'&&e.target.value){$('corte').value=e.target.value;}update();});
 $('sexo').addEventListener('change',()=>{fillFis();update();});
-update();
+update();go(0);
 </script>
 </body>
 </html>
