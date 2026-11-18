@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7e22ce">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Calculadora baremo permanencia</title>
 <style>
 :root{--bg:#111827;--card:#1f2937;--inp:#2d3748;--tx:#fff;--mu:#9ca3af;--lb:#a78bfa;--or:#f97316;--ok:#4ade80;--ko:#f87171;--bd:#374151;--gr:linear-gradient(90deg,#7e22ce,#f97316)}
@@ -201,5 +206,6 @@ document.addEventListener('input',e=>{if(e.target.id==='esp'&&e.target.value){$(
 $('sexo').addEventListener('change',()=>{fillFis();update();});
 update();go(0);
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
 </body>
 </html>
